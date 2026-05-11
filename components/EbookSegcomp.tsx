@@ -148,11 +148,22 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
     return () => observer.disconnect();
   }, []);
 
+  // Tracking Dinâmico (Rastreia cada página nova alcançada)
   useEffect(() => {
-    const pAtual = calcPercentual(paginaMaxima);
-    if (pAtual > lastTrackedPercent.current && (pAtual === 50 || paginaMaxima === 12)) {
-      lastTrackedPercent.current = pAtual;
-      sendTrack({ detalhesExtra: paginaMaxima === 12 ? "Chegou na Auditoria" : "Metade do Ebook" });
+    if (paginaMaxima > lastTrackedPercent.current) {
+      lastTrackedPercent.current = paginaMaxima; 
+      
+      const pAtual = calcPercentual(paginaMaxima);
+      let detalhe = `Lendo Pág. ${paginaMaxima}`;
+      
+      if (paginaMaxima === 1) detalhe = "Iniciou a Leitura";
+      if (paginaMaxima === 12) detalhe = "Iniciou a Auditoria";
+      if (paginaMaxima === 13) detalhe = "Chegou no Final (Contatos)";
+
+      sendTrack({ 
+        progressoCustom: `${pAtual}%`,
+        detalhesExtra: detalhe 
+      });
     }
   }, [paginaMaxima, sendTrack]);
 
