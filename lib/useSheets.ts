@@ -1,6 +1,6 @@
 export const sendToSheets = async (payload: any) => {
   // SUBSTITUA pela sua URL do Google Apps Script (a que termina em /exec)
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwfGipj-bFv-KjPVbOVsC3Frqzh118JbH34rxMWy58tDFcGG8c_ijW267rbNsAYcUXV/exec"; 
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw4qkCgq02R6X03fLCDyd5NAmpHsCSucqc0Ad0LNsn7Zxyjnj51hw-sr471n3y4vlWN/exec"; 
 
   try {
     await fetch(WEB_APP_URL, {

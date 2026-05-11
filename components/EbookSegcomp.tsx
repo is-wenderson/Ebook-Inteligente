@@ -3,19 +3,90 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { sendToSheets } from "@/lib/useSheets";
 
-const TOTAL_PAGES = 12;
+// Agora temos 13 páginas (11 de conteúdo + 1 de Diagnóstico + 1 Institucional Final)
+const TOTAL_PAGES = 14;
 
-const perguntasDiagnostico = [
-  "Câmeras de segurança cobrem 100% das entradas, garagens e pontos cegos do condomínio?",
-  "As gravações ficam armazenadas por no mínimo 30 dias com backup em nuvem?",
-  "O condomínio possui sistema de 'eclusa' (duplo portão) para a entrada de pedestres?",
-  "O acesso de moradores é automatizado (Biometria, Facial, TAG) sem depender da ação do porteiro?",
-  "O sistema de segurança possui Nobreak para continuar funcionando em quedas de energia?",
-  "Existe registro obrigatório (com documento) para absolutamente todos os visitantes e prestadores?",
-  "Entregadores (Ifood, Correios) são estritamente proibidos de subir até as unidades?",
-  "Há um alarme perimetral (cerca elétrica, sensor) instalado e operando em todos os muros?",
-  "A empresa de segurança realiza manutenções preventivas nos equipamentos a cada 6 meses?",
-  "A portaria recebe treinamento periódico contra golpes de 'engenharia social' e falsos fiscais?"
+const perguntasAuditoria = [
+  {
+    pergunta: "Se houver uma invasão noturna hoje, suas câmeras identificam o rosto com nitidez?",
+    opcoes: [
+      { texto: "A) Sim, imagem 100% clara com infravermelho de alta definição.", valor: 10 },
+      { texto: "B) Talvez, a imagem fica granulada ou escura à noite.", valor: 5 },
+      { texto: "C) Difícil, temos pontos cegos ou câmeras muito antigas.", valor: 0 }
+    ]
+  },
+  {
+    pergunta: "Em caso de apagão ou queda de energia na sua rua, o que acontece com a segurança?",
+    opcoes: [
+      { texto: "A) Tudo funciona normalmente com Nobreaks de longa duração.", valor: 10 },
+      { texto: "B) Câmeras param, mas os portões ainda funcionam um pouco.", valor: 5 },
+      { texto: "C) O sistema desliga e os portões ficam destravados ou manuais.", valor: 0 }
+    ]
+  },
+  {
+    pergunta: "Como é feito o acesso de pedestres (moradores e visitantes) no portão principal?",
+    opcoes: [
+      { texto: "A) Eclusa (duplo portão) com abertura via biometria/facial.", valor: 10 },
+      { texto: "B) Portão único, mas com liberação apenas pelo porteiro.", valor: 5 },
+      { texto: "C) Uso de chaves comuns ou TAGs que podem ser clonadas/perdidas.", valor: 0 }
+    ]
+  },
+  {
+    pergunta: "Como o condomínio gerencia as entregas de aplicativos (iFood, Correios)?",
+    opcoes: [
+      { texto: "A) Recebimento em passa-volume ou clausura, sem contato físico.", valor: 10 },
+      { texto: "B) Entregador entra na recepção, mas não sobe aos andares.", valor: 5 },
+      { texto: "C) Entregadores têm acesso livre aos blocos ou unidades.", valor: 0 }
+    ]
+  },
+  {
+    pergunta: "Qual é o nível de treinamento e preparo atual da sua equipe de portaria?",
+    opcoes: [
+      { texto: "A) Treinamento periódico rigoroso contra golpes e engenharia social.", valor: 10 },
+      { texto: "B) Foram instruídos, mas confiam na intuição (conhecem o morador).", valor: 5 },
+      { texto: "C) Não há protocolo claro; liberam acesso sob pressão ou pressa.", valor: 0 }
+    ]
+  },
+  {
+    pergunta: "Onde e como as imagens do seu circuito de câmeras são armazenadas?",
+    opcoes: [
+      { texto: "A) Backup em nuvem imediato; se roubarem o DVR, as imagens estão salvas.", valor: 10 },
+      { texto: "B) Apenas no DVR local, guardadas por cerca de 30 dias.", valor: 5 },
+      { texto: "C) Não sei / Gravamos por menos de 10 dias / Equipamento falha muito.", valor: 0 }
+    ]
+  },
+  {
+    pergunta: "Existe um alarme de intrusão perimetral nos muros do condomínio?",
+    opcoes: [
+      { texto: "A) Sim, cerca elétrica ativa integrada a sensores e monitoramento 24h.", valor: 10 },
+      { texto: "B) Temos cerca ou ouriço, mas não é monitorada ativamente.", valor: 5 },
+      { texto: "C) Não possuímos proteção eletrônica perimetral efetiva.", valor: 0 }
+    ]
+  },
+  {
+    pergunta: "Como funciona a manutenção dos seus equipamentos de segurança?",
+    opcoes: [
+      { texto: "A) Preventiva mensal com SLA rigoroso em contrato (até 4h).", valor: 10 },
+      { texto: "B) Chamamos um técnico apenas quando algo quebra (Corretiva).", valor: 5 },
+      { texto: "C) Vários equipamentos estão inoperantes há meses.", valor: 0 }
+    ]
+  },
+  {
+    pergunta: "Existe um protocolo de pânico silencioso para a portaria acionar em emergências?",
+    opcoes: [
+      { texto: "A) Sim, botão de pânico oculto com comunicação direta à central.", valor: 10 },
+      { texto: "B) O porteiro precisa ligar do próprio celular ou rádio.", valor: 5 },
+      { texto: "C) Não há nenhum procedimento rápido definido para coação.", valor: 0 }
+    ]
+  },
+  {
+    pergunta: "Qual o rigor na entrada de prestadores de serviço (TV a cabo, reformas)?",
+    opcoes: [
+      { texto: "A) Conferência de documento com foto, pré-cadastro e crachá obrigatório.", valor: 10 },
+      { texto: "B) Anotação do nome num caderno, mas sem retenção de documento.", valor: 5 },
+      { texto: "C) Morador avisa pelo interfone e a entrada é liberada diretamente.", valor: 0 }
+    ]
+  }
 ];
 
 function getSessionId(): string {
@@ -36,14 +107,13 @@ function calcPercentual(pagina: number): number {
 export default function EbookSegcomp({ lead }: { lead: any }) {
   const sessionId = useRef(getSessionId());
   
-  // Estados do Ebook
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [paginaMaxima, setPaginaMaxima] = useState(1);
   const [tempoInicio] = useState(Date.now());
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lastTrackedPercent = useRef(-1);
 
-  // Estados do Diagnóstico (Agora vivem dentro da última página)
+  // Estados da Auditoria
   const [perguntaAtual, setPerguntaAtual] = useState(0);
   const [respostasDiag, setRespostasDiag] = useState<number[]>([]);
   const [diagnosticoFinalizado, setDiagnosticoFinalizado] = useState(false);
@@ -60,7 +130,6 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
     });
   }, [paginaMaxima, tempoInicio, lead]);
 
-  // Observer de páginas
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -79,37 +148,42 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
     return () => observer.disconnect();
   }, []);
 
-  // Tracking antiduplicação (Envia com 50% de leitura e ao chegar na pág 12)
   useEffect(() => {
     const pAtual = calcPercentual(paginaMaxima);
     if (pAtual > lastTrackedPercent.current && (pAtual === 50 || paginaMaxima === 12)) {
       lastTrackedPercent.current = pAtual;
-      sendTrack({ detalhesExtra: paginaMaxima === 12 ? "Chegou no Diagnóstico" : "Metade do Ebook" });
+      sendTrack({ detalhesExtra: paginaMaxima === 12 ? "Chegou na Auditoria" : "Metade do Ebook" });
     }
   }, [paginaMaxima, sendTrack]);
 
-  // Lógica de responder o diagnóstico
   const responderDiagnostico = (valor: number) => {
     const novasRespostas = [...respostasDiag, valor];
     setRespostasDiag(novasRespostas);
 
-    if (perguntaAtual < perguntasDiagnostico.length - 1) {
+    if (perguntaAtual < perguntasAuditoria.length - 1) {
       setPerguntaAtual(prev => prev + 1);
     } else {
       setDiagnosticoFinalizado(true);
-      const scoreFinal = Math.round((novasRespostas.filter(r => r === 1).length / perguntasDiagnostico.length) * 100);
+      const pontuacaoTotal = novasRespostas.reduce((a, b) => a + b, 0);
+      const scoreFinal = Math.round((pontuacaoTotal / (perguntasAuditoria.length * 10)) * 100);
+      
+      // Essa mágica traduz a pontuação para a letra que ele escolheu (A, B ou C)
+      const relatorioLetras = novasRespostas.map((resp, index) => {
+        const letra = resp === 10 ? 'A' : resp === 5 ? 'B' : 'C';
+        return `P${index + 1}: ${letra}`;
+      }).join(" | ");
       
       sendTrack({
-        progressoCustom: "100% (Diagnóstico Concluído)",
+        progressoCustom: "100% (Auditoria Concluída)",
         scoreCalc: scoreFinal,
-        detalhesExtra: `Score: ${scoreFinal}% | Sim: ${novasRespostas.filter(r=>r===1).length}/${perguntasDiagnostico.length}`
+        detalhesExtra: `Auditoria Finalizada com Score de ${scoreFinal}%\nRespostas: [ ${relatorioLetras} ]`
       });
     }
   };
 
   const percentualEbook = calcPercentual(paginaMaxima);
-  const progressoDiag = Math.round((perguntaAtual / perguntasDiagnostico.length) * 100);
-  const scoreCalculado = Math.round((respostasDiag.filter(r => r === 1).length / perguntasDiagnostico.length) * 100);
+  const pontuacaoTotalAtual = respostasDiag.reduce((a, b) => a + b, 0);
+  const scoreCalculado = Math.round((pontuacaoTotalAtual / (perguntasAuditoria.length * 10)) * 100);
 
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", background: "#0a1128", minHeight: "100vh" }}>
@@ -155,7 +229,7 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
           <PageFooter />
         </div>
 
-<div ref={el => { pageRefs.current[2] = el; }} style={pageStyle()}>
+        <div ref={el => { pageRefs.current[2] = el; }} style={pageStyle()}>
           <PageHeader num="03" />
           <div style={bodyStyle}>
             <div>
@@ -371,63 +445,157 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
           </div>
           <PageFooter />
         </div>
-        {/* PÁGINA 12: O DIAGNÓSTICO INTEGRADO */}
+
+        
+        {/* ===== PÁGINA 12: RESPONSABILIDADE LEGAL ===== */}
         <div ref={el => { pageRefs.current[11] = el; }} style={pageStyle()}>
           <PageHeader num="12" />
           <div style={bodyStyle}>
-            
-            {!diagnosticoFinalizado ? (
-              // TELA DAS PERGUNTAS
-              <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center" }}>
-                <div style={{ marginBottom: 30 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", color: "#00e5e5", fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 2, marginBottom: 10 }}>
-                    <span>Diagnóstico de Risco</span>
-                    <span>{perguntaAtual + 1} / {perguntasDiagnostico.length}</span>
+            <div>
+              <div style={tagStyle}>Capítulo 6</div>
+              <h2 style={titleStyle}>A responsabilidade <span style={{ color: "#00e5e5" }}>legal do síndico</span></h2>
+            </div>
+            <p style={introStyle}>O síndico não é apenas um gestor de obras e contas. Ele também responde legalmente pela segurança do condomínio.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {[
+                { n: "⚖️", title: "Código Civil (Art. 1.348)", desc: "O síndico tem o dever de 'diligenciar a conservação e a guarda das partes comuns'. Isso inclui a segurança das áreas comuns." },
+                { n: "📋", title: "Responsabilidade civil", desc: "Se um morador ou visitante sofrer dano por negligência na segurança, o síndico pode ser responsabilizado pessoalmente." },
+                { n: "🏛️", title: "LGPD e câmeras", desc: "As gravações de câmeras são dados pessoais. O condomínio deve ter política de privacidade e controlar quem acessa as imagens." },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", gap: 14 }}>
+                  <div style={{ ...dotStyle, background: "#1A3050", fontSize: 16 }}>{item.n}</div>
+                  <div>
+                    <strong style={{ display: "block", color: "#fff", fontSize: 14, marginBottom: 3 }}>{item.title}</strong>
+                    <span style={{ fontSize: 13, color: "#B0C4D8", lineHeight: 1.5 }}>{item.desc}</span>
                   </div>
-                  <div style={{ width: "100%", background: "#1e293b", borderRadius: 10, height: 6 }}>
-                    <div style={{ background: "#00e5e5", height: 6, borderRadius: 10, width: `${progressoDiag}%`, transition: "width 0.3s" }} />
-                  </div>
                 </div>
-
-                <h2 style={{ fontSize: 26, fontWeight: 900, lineHeight: 1.3, textAlign: "center", marginBottom: 40, color: "#fff" }}>
-                  {perguntasDiagnostico[perguntaAtual]}
-                </h2>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-                  <button onClick={() => responderDiagnostico(1)} style={{ ...botaoDiagnosticoStyle, borderLeft: "4px solid #00e5e5" }}>
-                    Sim, possuímos
-                  </button>
-                  <button onClick={() => responderDiagnostico(0)} style={{ ...botaoDiagnosticoStyle, borderLeft: "4px solid #FF6B35" }}>
-                    Não possuímos
-                  </button>
-                </div>
-              </div>
-            ) : (
-              // TELA DO RESULTADO FINAL
-              <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center", alignItems: "center", textAlign: "center" }}>
-                <div style={tagStyle}>Resultado do Diagnóstico</div>
-                <h2 style={{ ...titleStyle, marginBottom: 10 }}>O seu Nível de <span style={{ color: "#00e5e5" }}>Proteção</span></h2>
-                
-                <div style={{ fontSize: 80, fontWeight: 900, lineHeight: 1, margin: "20px 0", color: scoreCalculado < 50 ? "#FF6B35" : scoreCalculado < 80 ? "#FFD700" : "#00e5e5" }}>
-                  {scoreCalculado}%
-                </div>
-                
-                <p style={{ ...textStyle, marginBottom: 40, maxWidth: 500 }}>
-                  {scoreCalculado < 50 ? "⚠️ Risco Crítico: Seu condomínio possui vulnerabilidades graves que facilitam invasões. Uma ação imediata é necessária." : 
-                   scoreCalculado < 80 ? "🛡️ Risco Médio: Vocês têm uma base, mas brechas importantes estão abertas. Golpistas focam nesses pontos." : 
-                   "✅ Excelente: Seu condomínio adota práticas de elite. Manter a manutenção é o próximo passo."}
-                </p>
-
-                <button 
-                  onClick={() => window.open("https://wa.me/5584981878563")}
-                  style={{ ...ctaButtonStyle, width: "100%" }}>
-                  Falar com Especialista SEGCOMP →
-                </button>
-              </div>
-            )}
-
+              ))}
+            </div>
+            <TipBox icon="🛡️" text={<>Documente todas as decisões de segurança em ata de assembleia. Isso demonstra que você agiu com diligência e protege você de responsabilizações futuras.</>} />
+            <WarnBox icon="📌" text={<>Consulte sempre um advogado condominial para revisar contratos e decisões importantes. A prevenção jurídica é tão importante quanto a segurança física.</>} />
           </div>
           <PageFooter />
+        </div>
+
+        {/* ===== PÁGINA 13: A AUDITORIA TÉCNICA ===== */}
+        <div ref={el => { pageRefs.current[12] = el; }} style={pageStyle()}>
+          <PageHeader num="13" />
+          <div style={{ ...bodyStyle, display: "flex", flexDirection: "column" }}>
+            
+            {/* CABEÇALHO ADICIONADO AQUI (Fica fixo no topo do corpo) */}
+            <div style={{ marginBottom: 10 }}>
+              <div style={tagStyle}>Auditoria Especializada</div>
+              <h2 style={titleStyle}>Descubra o seu nível real de <span style={{ color: "#00e5e5" }}>proteção</span></h2>
+              <p style={textStyle}>Responda com sinceridade para o sistema calcular a eficiência técnica do seu condomínio:</p>
+            </div>
+            
+            {/* CONTAINER FLEX PARA CENTRALIZAR O CARD NA VERTICAL E HORIZONTAL */}
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "100%" }}>
+              
+              {!diagnosticoFinalizado ? (
+                // CARD DA PERGUNTA
+                <div style={{
+                  background: "#0f172a", border: "1px solid #1e293b", borderRadius: "24px", 
+                  padding: "30px", boxShadow: "0 20px 40px rgba(0,0,0,0.4)", 
+                  width: "100%", maxWidth: "600px"
+                }}>
+                  <div style={{ color: "#00e5e5", fontSize: 14, fontWeight: 900, marginBottom: 20, letterSpacing: 1, textTransform: "uppercase" }}>
+                    PERGUNTA {String(perguntaAtual + 1).padStart(2, '0')}/{perguntasAuditoria.length}
+                  </div>
+                  
+                  <h2 style={{ fontSize: 20, fontWeight: 800, color: "#fff", fontStyle: "italic", marginBottom: 20, lineHeight: 1.4 }}>
+                    {perguntasAuditoria[perguntaAtual].pergunta}
+                  </h2>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {perguntasAuditoria[perguntaAtual].opcoes.map((opcao, idx) => (
+                      <button 
+                        key={idx}
+                        onClick={() => responderDiagnostico(opcao.valor)} 
+                        style={{
+                          background: "#132338", color: "#fff", padding: "16px 20px", borderRadius: "16px", 
+                          border: "1px solid #1e293b", fontSize: "14px", fontWeight: 700, fontStyle: "italic", cursor: "pointer", 
+                          transition: "all 0.2s ease", textAlign: "left", display: "flex", alignItems: "center"
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.borderColor = "#00e5e5";
+                          e.currentTarget.style.background = "rgba(0, 229, 229, 0.05)";
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.borderColor = "#1e293b";
+                          e.currentTarget.style.background = "#132338";
+                        }}
+                      >
+                        {opcao.texto}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+              ) : (
+                // TELA DO RESULTADO FINAL (CARD NEON)
+                <div style={{
+                  width: "100%", maxWidth: "500px", padding: 40, borderRadius: 24, textAlign: "center",
+                  background: "#0f172a", border: `2px solid ${scoreCalculado < 50 ? "#e11d48" : scoreCalculado < 80 ? "#f59e0b" : "#00e5e5"}`,
+                  boxShadow: `0 0 40px ${scoreCalculado < 50 ? "rgba(225, 29, 72, 0.2)" : scoreCalculado < 80 ? "rgba(245, 158, 11, 0.2)" : "rgba(0, 229, 229, 0.2)"}`
+                }}>
+                  <div style={{ fontSize: 11, color: "#7A9BB5", fontWeight: 800, letterSpacing: 3, textTransform: "uppercase", marginBottom: 15 }}>
+                    Resultado da Auditoria
+                  </div>
+                  
+                  <div style={{ fontSize: 80, fontWeight: 900, lineHeight: 1, color: scoreCalculado < 50 ? "#e11d48" : scoreCalculado < 80 ? "#f59e0b" : "#00e5e5", letterSpacing: -2 }}>
+                    {scoreCalculado}%
+                  </div>
+                  
+                  <div style={{ fontSize: 20, fontWeight: 900, color: "#fff", fontStyle: "italic", textTransform: "uppercase", marginTop: 5, marginBottom: 10 }}>
+                    Eficiência Técnica
+                  </div>
+                  
+                  <div style={{ fontSize: 12, fontWeight: 800, color: scoreCalculado < 50 ? "#e11d48" : scoreCalculado < 80 ? "#f59e0b" : "#00e5e5", textTransform: "uppercase", letterSpacing: 1, marginBottom: 30 }}>
+                    {scoreCalculado < 50 ? "⚠️ Atenção: Risco Crítico Detectado" : scoreCalculado < 80 ? "⚠️ Aviso: Vulnerabilidades Abertas" : "✅ Status: Condomínio Seguro"}
+                  </div>
+
+                  <button 
+                    onClick={() => window.open(`https://wa.me/5584981878563?text=Olá, acabei de ler o Guia e minha auditoria deu ${scoreCalculado}%. Gostaria de agendar uma consultoria.`)}
+                    style={{ 
+                      background: scoreCalculado < 80 ? "#e11d48" : "#00e5e5", 
+                      color: scoreCalculado < 80 ? "#fff" : "#0a1128", 
+                      width: "100%", padding: "18px", borderRadius: "12px", border: "none",
+                      fontSize: 15, fontWeight: 900, textTransform: "uppercase", cursor: "pointer",
+                      boxShadow: scoreCalculado < 80 ? "0 10px 25px rgba(225, 29, 72, 0.4)" : "0 10px 25px rgba(0, 229, 229, 0.3)"
+                    }}>
+                    Solicitar Auditoria de Urgência
+                  </button>
+                </div>
+              )}
+              
+            </div>
+          </div>
+          <PageFooter />
+        </div>
+        {/* ===== PÁGINA 14: CONTATOS (A Página Final Original Restaurada) ===== */}
+        <div ref={el => { pageRefs.current[13] = el; }} style={pageStyle("capa")}>
+           <div style={{ textAlign: "center", padding: 40 }}>
+             <div style={{ fontSize: 60, marginBottom: 20 }}>🛡️</div>
+             <h2 style={{ fontSize: 42, fontWeight: 900, lineHeight: 1.1, margin: "16px 0" }}>
+               Segurança é <br/><span style={{ color: "#00e5e5" }}>Responsabilidade.</span>
+             </h2>
+             <p style={{ color: "#B0C4D8", marginTop: 20, fontSize: 16 }}>
+               Proteja seu patrimônio com a tecnologia de quem é líder no RN.
+             </p>
+             <button 
+               onClick={() => { sendTrack({ detalhesExtra: "Clicou Contato Final" }); window.open("https://wa.me/5584981878563"); }}
+               style={ctaButtonStyle}>
+               Falar com Consultor SEGCOMP
+             </button>
+             
+             <div style={{ marginTop: 60, fontSize: 13, color: "#7A9BB5", lineHeight: 1.8 }}>
+               <strong>SEGCOMP - Grupo ECOMP</strong><br/>
+               www.grupoecomp.com.br<br/>
+               (84) 98187-8563<br/>
+               Natal / RN
+             </div>
+           </div>
         </div>
 
       </div>
@@ -441,7 +609,7 @@ function PageHeader({ num }: { num: string }) {
   return (
     <div style={{ padding: "20px 50px", borderBottom: "3px solid #00e5e5", display: "flex", justifyContent: "space-between", background: "#0f172a" }}>
       <span style={{ fontSize: 12, fontWeight: 900, color: "#00e5e5", letterSpacing: 2 }}>SEGCOMP</span>
-      <span style={{ fontSize: 12, color: "#7A9BB5" }}>PÁG. {num} / 12</span>
+      <span style={{ fontSize: 12, color: "#7A9BB5", fontWeight: 600 }}>PÁG. {num} / 13</span>
     </div>
   );
 }
@@ -499,17 +667,11 @@ const introStyle: React.CSSProperties = { fontSize: 16, color: "#B0C4D8", lineHe
 const textStyle: React.CSSProperties = { fontSize: 15, color: "#cbd5e1", lineHeight: 1.6 };
 const tagStyle: React.CSSProperties = { display: "inline-block", color: "#00e5e5", fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", marginBottom: 8 };
 const badgeStyle: React.CSSProperties = { display: "inline-block", background: "#00e5e5", color: "#0f172a", fontSize: 11, fontWeight: 800, padding: "6px 16px", borderRadius: 20, marginBottom: 15 };
-const ctaButtonStyle: React.CSSProperties = { background: "#00e5e5", color: "#0f172a", border: "none", borderRadius: 12, padding: "18px 40px", fontSize: 16, fontWeight: 800, cursor: "pointer", marginTop: 20, boxShadow: "0 10px 20px #00e5e533" };
+const ctaButtonStyle: React.CSSProperties = { background: "#00e5e5", color: "#0f172a", border: "none", borderRadius: 12, padding: "18px 40px", fontSize: 16, fontWeight: 800, cursor: "pointer", marginTop: 30, boxShadow: "0 10px 20px #00e5e533" };
 const capaImgStyle: React.CSSProperties = { position: "absolute", top: 0, left: 0, width: "100%", height: "65%", objectFit: "cover" };
 const capaOverlayStyle: React.CSSProperties = { position: "absolute", bottom: 0, left: 0, right: 0, height: "60%", background: "linear-gradient(to top, #0f172a 50%, transparent)" };
 const capaContentStyle: React.CSSProperties = { position: "relative", zIndex: 2, textAlign: "center", padding: 60, marginTop: "auto" };
 const capaTitleStyle: React.CSSProperties = { fontSize: 52, fontWeight: 900, lineHeight: 1.1, margin: "16px 0" };
-
-const botaoDiagnosticoStyle: React.CSSProperties = {
-  background: "#132338", color: "#fff", padding: "20px", borderRadius: "12px", 
-  fontSize: "18px", fontWeight: 700, cursor: "pointer", transition: "0.2s", 
-  textAlign: "left", boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
-};
 
 const dotStyle: React.CSSProperties = {
   width: 28, height: 28, background: "#00e5e5", borderRadius: "50%", display: "flex",
