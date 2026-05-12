@@ -755,7 +755,7 @@ const capaTitleStyle: React.CSSProperties = {
   margin: "20px 0",
   letterSpacing: "-2px"
 };
-//teste
+
 const dotStyle: React.CSSProperties = {
   width: 28, height: 28, background: "#00e5e5", borderRadius: "50%", display: "flex",
   alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#0a1128", flexShrink: 0, marginTop: 2
