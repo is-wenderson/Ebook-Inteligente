@@ -111,7 +111,7 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
   const [paginaMaxima, setPaginaMaxima] = useState(1);
   const [tempoInicio] = useState(Date.now());
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const lastTrackedPercent = useRef(-1);
+  const lastTrackedPercent = useRef(1);
 
   // Estados da Auditoria
   const [perguntaAtual, setPerguntaAtual] = useState(0);
@@ -590,9 +590,16 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
         <div ref={el => { pageRefs.current[13] = el; }} style={pageStyle("capa")}>
            <div style={{ textAlign: "center", padding: "clamp(20px, 5vw, 40px)", display: "flex", flexDirection: "column", alignItems: "center" }}>
              <div style={{ fontSize: 60, marginBottom: 20 }}>🛡️</div>
-             <h2 style={{ fontSize: "clamp(32px, 8vw, 42px)", fontWeight: 900, lineHeight: 1.2, margin: "16px 0", wordBreak: "break-word" }}>
-               Segurança é <br/><span style={{ color: "#00e5e5" }}>Responsabilidade.</span>
-             </h2>
+             <h2 style={{ 
+                fontSize: "clamp(28px, 7vw, 42px)", // Ajusta entre 28px e 42px conforme a tela
+                fontWeight: 900, 
+                lineHeight: 1.1, 
+                margin: "16px 0",
+                wordBreak: "break-word", // Força a quebra se a palavra for gigante
+                maxWidth: "100%" 
+              }}>
+                Segurança é <br/><span style={{ color: "#00e5e5" }}>Responsabilidade.</span>
+              </h2>
              <p style={{ color: "#B0C4D8", marginTop: 20, fontSize: "clamp(14px, 4vw, 16px)", maxWidth: "400px" }}>
                Proteja seu patrimônio com a tecnologia de quem é líder no RN.
              </p>
