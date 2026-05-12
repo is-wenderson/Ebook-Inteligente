@@ -548,14 +548,14 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
                 // TELA DO RESULTADO FINAL (CARD NEON)
                 <div style={{
                   width: "100%", maxWidth: "500px", padding: 40, borderRadius: 24, textAlign: "center",
-                  background: "#0f172a", border: `2px solid ${scoreCalculado < 50 ? "#e11d48" : scoreCalculado < 80 ? "#f59e0b" : "#00e5e5"}`,
+                  background: "#0f172a", border: `2px solid ${scoreCalculado < 70 ? "#e11d48" : scoreCalculado < 90 ? "#f59e0b" : "#00e5e5"}`,
                   boxShadow: `0 0 40px ${scoreCalculado < 50 ? "rgba(225, 29, 72, 0.2)" : scoreCalculado < 80 ? "rgba(245, 158, 11, 0.2)" : "rgba(0, 229, 229, 0.2)"}`
                 }}>
                   <div style={{ fontSize: 11, color: "#7A9BB5", fontWeight: 800, letterSpacing: 3, textTransform: "uppercase", marginBottom: 15 }}>
                     Resultado da Auditoria
                   </div>
                   
-                  <div style={{ fontSize: 80, fontWeight: 900, lineHeight: 1, color: scoreCalculado < 50 ? "#e11d48" : scoreCalculado < 80 ? "#f59e0b" : "#00e5e5", letterSpacing: -2 }}>
+                  <div style={{ fontSize: 80, fontWeight: 900, lineHeight: 1, color: scoreCalculado < 70 ? "#e11d48" : scoreCalculado < 90 ? "#f59e0b" : "#00e5e5", letterSpacing: -2 }}>
                     {scoreCalculado}%
                   </div>
                   
@@ -563,18 +563,18 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
                     Eficiência Técnica
                   </div>
                   
-                  <div style={{ fontSize: 12, fontWeight: 800, color: scoreCalculado < 50 ? "#e11d48" : scoreCalculado < 80 ? "#f59e0b" : "#00e5e5", textTransform: "uppercase", letterSpacing: 1, marginBottom: 30 }}>
-                    {scoreCalculado < 50 ? "⚠️ Atenção: Risco Crítico Detectado" : scoreCalculado < 80 ? "⚠️ Aviso: Vulnerabilidades Abertas" : "✅ Status: Condomínio Seguro"}
+                  <div style={{ fontSize: 12, fontWeight: 800, color: scoreCalculado < 70 ? "#e11d48" : scoreCalculado < 90 ? "#f59e0b" : "#00e5e5", textTransform: "uppercase", letterSpacing: 1, marginBottom: 30 }}>
+                    {scoreCalculado < 70 ? "⚠️ Atenção: Risco Crítico Detectado" : scoreCalculado < 90 ? "⚠️ Aviso: Vulnerabilidades Abertas" : "✅ Status: Condomínio Seguro"}
                   </div>
 
                   <button 
                     onClick={() => window.open(`https://wa.me/5584981878563?text=Olá, acabei de ler o Guia e minha auditoria deu ${scoreCalculado}%. Gostaria de agendar uma consultoria.`)}
                     style={{ 
-                      background: scoreCalculado < 80 ? "#e11d48" : "#00e5e5", 
-                      color: scoreCalculado < 80 ? "#fff" : "#0a1128", 
+                      background: scoreCalculado < 90 ? "#e11d48" : "#00e5e5", 
+                      color: scoreCalculado < 90 ? "#fff" : "#0a1128", 
                       width: "100%", padding: "18px", borderRadius: "12px", border: "none",
                       fontSize: 15, fontWeight: 900, textTransform: "uppercase", cursor: "pointer",
-                      boxShadow: scoreCalculado < 80 ? "0 10px 25px rgba(225, 29, 72, 0.4)" : "0 10px 25px rgba(0, 229, 229, 0.3)"
+                      boxShadow: scoreCalculado < 90 ? "0 10px 25px rgba(225, 29, 72, 0.4)" : "0 10px 25px rgba(0, 229, 229, 0.3)"
                     }}>
                     Solicitar Auditoria de Urgência
                   </button>
