@@ -210,9 +210,8 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
 
       <div style={{ paddingTop: 60, display: "flex", flexDirection: "column", alignItems: "center" }}>
         
-        {/* PÁGINA 1: CAPA - AJUSTADA PARA IMPACTO IMEDIATO */}
+        {/* PÁGINA 1: CAPA - IMPACTO IMEDIATO */}
         <div ref={el => { pageRefs.current[0] = el; }} style={pageStyle("capa")}>
-          {/* Imagem de fundo com overlay mais escuro para leitura */}
           <img 
             src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029798090/YYVnAgDirJBaehnwAR7pmf/capa-MXwq5AqAnrhBFM6GeDeyUk.png" 
             alt="Capa" 
@@ -221,25 +220,31 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
           <div style={capaOverlayStyle} />
           
           <div style={capaContentStyle}>
+            {/* Espaçador superior curto para não colar no topo, mas manter alto */}
+            <div style={{ height: "60px" }}></div>
+
             <div style={badgeStyle}>Material Exclusivo SEGCOMP</div>
             
             <h1 style={capaTitleStyle}>
               O Guia do<br />
-              <span style={{ color: "#00e5e5", textShadow: "0 0 20px rgba(0,229,229,0.3)" }}>
+              <span style={{ color: "#00e5e5", textShadow: "0 0 30px rgba(0,229,229,0.4)" }}>
                 Síndico Seguro
               </span>
             </h1>
             
-            <p style={{ color: "#B0C4D8", fontSize: "clamp(16px, 4vw, 20px)", maxWidth: "500px", margin: "0 auto", lineHeight: 1.4 }}>
+            <p style={{ color: "#B0C4D8", fontSize: "clamp(16px, 4vw, 19px)", maxWidth: "500px", margin: "0 auto", lineHeight: 1.5, fontWeight: 500 }}>
               Estratégias de elite para blindar seu condomínio contra as novas táticas de invasão.
             </p>
 
-            {/* Indicador visual de ação */}
-            <div style={{ marginTop: "40px", animation: "bounce 2s infinite" }}>
-              <span style={{ fontSize: "12px", color: "#00e5e5", textTransform: "uppercase", letterSpacing: "3px", fontWeight: 800 }}>
-                Role para iniciar a leitura
+            {/* A "MOLA": Este flex empurra o conteúdo acima para o topo */}
+            <div style={{ flex: 1 }}></div>
+
+            {/* INDICADOR DE SCROLL */}
+            <div style={{ marginBottom: "50px", textAlign: "center", animation: "bounce 2s infinite" }}>
+              <span style={{ fontSize: "10px", color: "#00e5e5", letterSpacing: "4px", fontWeight: 900, textTransform: "uppercase" }}>
+                Role para iniciar
               </span>
-              <div style={{ fontSize: "24px", color: "#00e5e5", marginTop: "10px" }}>↓</div>
+              <div style={{ fontSize: "24px", color: "#00e5e5", marginTop: "5px" }}>↓</div>
             </div>
           </div>
         </div>
@@ -703,7 +708,20 @@ function CardItem({ icon, title, desc, accentColor = "#00e5e5" }: { icon: string
 const navStyle: React.CSSProperties = { position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000, background: "#0f172a", padding: "10px 20px", display: "flex", alignItems: "center", gap: 16, borderBottom: "1px solid #1e293b" };
 const progressContainerStyle: React.CSSProperties = { flex: 1, background: "#1e293b", borderRadius: 10, height: 6, overflow: "hidden" };
 const progressBarStyle: React.CSSProperties = { height: "100%", background: "#00e5e5", transition: "width 0.5s ease" };
-const pageStyle = (type?: string): React.CSSProperties => ({ width: "100%", maxWidth: 794, minHeight: 1123, background: "#0f172a", color: "#fff", display: "flex", flexDirection: "column", position: "relative", borderBottom: "4px solid #0a1128", justifyContent: type === "capa" ? "center" : "flex-start" });
+const pageStyle = (type?: string): React.CSSProperties => ({ 
+  width: "100%", 
+  maxWidth: 794, 
+  minHeight: "100vh", // No mobile, isso garante que ocupa a tela toda
+  background: "#0a1128", 
+  color: "#fff", 
+  display: "flex", 
+  flexDirection: "column", 
+  position: "relative", 
+  borderBottom: "4px solid #0a1128", 
+  overflow: "hidden",
+  // Se for capa, não forçamos o início, deixamos o conteúdo se distribuir
+  justifyContent: type === "capa" ? "stretch" : "flex-start" 
+});
 const bodyStyle: React.CSSProperties = { 
   flex: 1, 
   padding: "clamp(24px, 5vw, 40px) clamp(20px, 5vw, 50px)", // Se adapta à tela
@@ -741,12 +759,13 @@ const capaContentStyle: React.CSSProperties = {
   position: "relative", 
   zIndex: 2, 
   textAlign: "center", 
-  padding: "20px",
-  marginTop: "80px", // Dá espaço para a barra de navegação superior
+  padding: "40px 20px",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  justifyContent: "flex-start"
+  justifyContent: "center", // Centraliza verticalmente no espaço
+  flex: 1, // Faz o conteúdo ocupar a página toda para a centralização funcionar
+  width: "100%"
 };
 const capaTitleStyle: React.CSSProperties = { 
   fontSize: "clamp(38px, 10vw, 64px)", // Muito maior e responsivo
