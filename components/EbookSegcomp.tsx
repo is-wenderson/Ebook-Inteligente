@@ -157,6 +157,7 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
       let detalhe = `Lendo Pág. ${paginaMaxima}`;
       
       if (paginaMaxima === 1) detalhe = "Iniciou a Leitura";
+      if (paginaMaxima === 6) detalhe = "Metade da Leitura";
       if (paginaMaxima === 12) detalhe = "Iniciou a Auditoria";
       if (paginaMaxima === 13) detalhe = "Chegou no Final (Contatos)";
 
@@ -231,7 +232,7 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
             <p style={introStyle}>Ser síndico é uma responsabilidade enorme. Você cuida do patrimônio e da segurança de dezenas — às vezes centenas — de famílias.</p>
             <p style={textStyle}>Você vai aprender o essencial sobre segurança condominial em linguagem simples.</p>
             
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20 }}>
               <StatBox num="73%" label="dos crimes ocorrem na entrada" />
               <StatBox num="60%" label="possuem câmeras mal posicionadas" />
               <StatBox num="3x" label="mais seguro com controle de acesso" />
@@ -282,7 +283,7 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
               <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029798090/YYVnAgDirJBaehnwAR7pmf/cameras-MR2ACq7jbRu6oPmgLpB7Mq.png" alt="Mapa câmeras" style={{ width: "100%", display: "block" }} />
             </div>
             <p style={textStyle}>O posicionamento correto das câmeras faz toda a diferença. Não adianta ter muitas câmeras se elas não cobrem os pontos certos.</p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20 }}>
               <CardItem icon="🚪" title="Entrada principal" desc="Câmera de alta resolução focada no rosto de quem entra. Deve cobrir pedestres e veículos." />
               <CardItem icon="🅿️" title="Garagem" desc="Câmeras nas rampas de acesso, corredores e vagas. Iluminação adequada é obrigatória." />
             </div>
@@ -298,7 +299,7 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
               <div style={tagStyle}>Capítulo 2 — continuação</div>
               <h2 style={titleStyle}>O que observar <span style={{ color: "#00C9B1" }}>ao instalar câmeras</span></h2>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
               <CardItem icon="🛗" title="Elevadores" desc="Câmera interna no elevador e no hall de cada andar. Registra movimentação suspeita." />
               <CardItem icon="🌿" title="Área de lazer" desc="Piscina, churrasqueira e playground devem ter cobertura. Evita conflitos e registra incidentes." />
               <CardItem icon="🏠" title="Área de serviço" desc="Entrada de prestadores, lixeiras e depósitos. Pontos frequentes de furtos internos." />
@@ -322,7 +323,7 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
               <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029798090/YYVnAgDirJBaehnwAR7pmf/acesso-CxBE3vcrXYRvhUKjwEkXi2.png" alt="Controle de acesso" style={{ width: "100%", display: "block" }} />
             </div>
             <p style={textStyle}>Controlar quem entra e sai é a base de qualquer sistema de segurança eficiente. Existem diferentes tecnologias — e a escolha certa depende do perfil do seu condomínio.</p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20 }}>
               <CardItem icon="🖐️" title="Biometria" desc="Impressão digital ou reconhecimento facial. Mais seguro, elimina chaves e cartões perdidos." />
               <CardItem icon="📱" title="Interfone com app" desc="Síndico e moradores autorizam visitas pelo celular, mesmo à distância. Prático e rastreável." />
             </div>
@@ -398,7 +399,7 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
               <h2 style={titleStyle}>O que um bom <span style={{ color: "#00C9B1" }}>contrato deve ter</span></h2>
             </div>
             <p style={textStyle}>Um contrato bem feito protege o condomínio. Antes de assinar, verifique se estes itens estão presentes:</p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
               <CardItem icon="📄" title="Escopo detalhado" desc="Quais equipamentos, quantos pontos, quais áreas serão cobertas. Tudo descrito item por item." />
               <CardItem icon="⏱️" title="SLA de atendimento" desc="Prazo máximo para resposta em caso de falha. O ideal é até 4h para problemas críticos." />
               <CardItem icon="🔧" title="Manutenção preventiva" desc="Visitas periódicas para verificar funcionamento dos equipamentos. Mínimo: 2x por ano." />
@@ -420,7 +421,7 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
             <div style={{ borderRadius: 12, overflow: "hidden" }}>
               <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029798090/YYVnAgDirJBaehnwAR7pmf/erros-jfidzy9vmGJ3BE4Xrz8GXN.png" alt="Erros comuns" style={{ width: "100%", display: "block" }} />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
               <CardItem icon="❌" title="Câmeras sem manutenção" desc="Câmera com lente suja, fora de foco ou com defeito não serve para nada. Teste regularmente." accentColor="#FF6B35" />
               <CardItem icon="❌" title="Portão sempre aberto" desc="Portão de garagem ou pedestres que fica aberto 'para facilitar' é convite para invasores." accentColor="#FF6B35" />
             </div>
@@ -584,19 +585,20 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
           </div>
           <PageFooter />
         </div>
-        {/* ===== PÁGINA 14: CONTATOS (A Página Final Original Restaurada) ===== */}
+        
+        {/* ===== PÁGINA 14: CONTATOS ===== */}
         <div ref={el => { pageRefs.current[13] = el; }} style={pageStyle("capa")}>
-           <div style={{ textAlign: "center", padding: 40 }}>
+           <div style={{ textAlign: "center", padding: "clamp(20px, 5vw, 40px)", display: "flex", flexDirection: "column", alignItems: "center" }}>
              <div style={{ fontSize: 60, marginBottom: 20 }}>🛡️</div>
-             <h2 style={{ fontSize: 42, fontWeight: 900, lineHeight: 1.1, margin: "16px 0" }}>
+             <h2 style={{ fontSize: "clamp(32px, 8vw, 42px)", fontWeight: 900, lineHeight: 1.2, margin: "16px 0", wordBreak: "break-word" }}>
                Segurança é <br/><span style={{ color: "#00e5e5" }}>Responsabilidade.</span>
              </h2>
-             <p style={{ color: "#B0C4D8", marginTop: 20, fontSize: 16 }}>
+             <p style={{ color: "#B0C4D8", marginTop: 20, fontSize: "clamp(14px, 4vw, 16px)", maxWidth: "400px" }}>
                Proteja seu patrimônio com a tecnologia de quem é líder no RN.
              </p>
              <button 
                onClick={() => { sendTrack({ detalhesExtra: "Clicou Contato Final" }); window.open("https://wa.me/5584981878563"); }}
-               style={ctaButtonStyle}>
+               style={{ ...ctaButtonStyle, width: "100%", maxWidth: "350px", padding: "16px 20px" }}>
                Falar com Consultor SEGCOMP
              </button>
              
@@ -672,8 +674,18 @@ const navStyle: React.CSSProperties = { position: "fixed", top: 0, left: 0, righ
 const progressContainerStyle: React.CSSProperties = { flex: 1, background: "#1e293b", borderRadius: 10, height: 6, overflow: "hidden" };
 const progressBarStyle: React.CSSProperties = { height: "100%", background: "#00e5e5", transition: "width 0.5s ease" };
 const pageStyle = (type?: string): React.CSSProperties => ({ width: "100%", maxWidth: 794, minHeight: 1123, background: "#0f172a", color: "#fff", display: "flex", flexDirection: "column", position: "relative", borderBottom: "4px solid #0a1128", justifyContent: type === "capa" ? "center" : "flex-start" });
-const bodyStyle: React.CSSProperties = { flex: 1, padding: "40px 50px", display: "flex", flexDirection: "column", gap: 20 };
-const titleStyle: React.CSSProperties = { fontSize: 32, fontWeight: 900, lineHeight: 1.1 };
+const bodyStyle: React.CSSProperties = { 
+  flex: 1, 
+  padding: "clamp(24px, 5vw, 40px) clamp(20px, 5vw, 50px)", // Se adapta à tela
+  display: "flex", 
+  flexDirection: "column", 
+  gap: 20 
+};
+const titleStyle: React.CSSProperties = { 
+  fontSize: "clamp(24px, 6vw, 32px)", // Isso faz a fonte diminuir no celular
+  fontWeight: 900, 
+  lineHeight: 1.1 
+};
 const introStyle: React.CSSProperties = { fontSize: 16, color: "#B0C4D8", lineHeight: 1.7, borderLeft: "3px solid #00e5e5", paddingLeft: 18 };
 const textStyle: React.CSSProperties = { fontSize: 15, color: "#cbd5e1", lineHeight: 1.6 };
 const tagStyle: React.CSSProperties = { display: "inline-block", color: "#00e5e5", fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", marginBottom: 8 };
@@ -682,8 +694,12 @@ const ctaButtonStyle: React.CSSProperties = { background: "#00e5e5", color: "#0f
 const capaImgStyle: React.CSSProperties = { position: "absolute", top: 0, left: 0, width: "100%", height: "65%", objectFit: "cover" };
 const capaOverlayStyle: React.CSSProperties = { position: "absolute", bottom: 0, left: 0, right: 0, height: "60%", background: "linear-gradient(to top, #0f172a 50%, transparent)" };
 const capaContentStyle: React.CSSProperties = { position: "relative", zIndex: 2, textAlign: "center", padding: 60, marginTop: "auto" };
-const capaTitleStyle: React.CSSProperties = { fontSize: 52, fontWeight: 900, lineHeight: 1.1, margin: "16px 0" };
-
+const capaTitleStyle: React.CSSProperties = { 
+  fontSize: "clamp(36px, 8vw, 52px)", // Fonte diminui no celular
+  fontWeight: 900, 
+  lineHeight: 1.1, 
+  margin: "16px 0" 
+};
 const dotStyle: React.CSSProperties = {
   width: 28, height: 28, background: "#00e5e5", borderRadius: "50%", display: "flex",
   alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#0a1128", flexShrink: 0, marginTop: 2
