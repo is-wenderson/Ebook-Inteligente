@@ -210,14 +210,37 @@ export default function EbookSegcomp({ lead }: { lead: any }) {
 
       <div style={{ paddingTop: 60, display: "flex", flexDirection: "column", alignItems: "center" }}>
         
-        {/* PÁGINA 1: CAPA */}
+        {/* PÁGINA 1: CAPA - AJUSTADA PARA IMPACTO IMEDIATO */}
         <div ref={el => { pageRefs.current[0] = el; }} style={pageStyle("capa")}>
-          <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029798090/YYVnAgDirJBaehnwAR7pmf/capa-MXwq5AqAnrhBFM6GeDeyUk.png" alt="Capa" style={capaImgStyle} />
+          {/* Imagem de fundo com overlay mais escuro para leitura */}
+          <img 
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029798090/YYVnAgDirJBaehnwAR7pmf/capa-MXwq5AqAnrhBFM6GeDeyUk.png" 
+            alt="Capa" 
+            style={capaImgStyle} 
+          />
           <div style={capaOverlayStyle} />
+          
           <div style={capaContentStyle}>
-            <div style={badgeStyle}>Guia Estratégico</div>
-            <h1 style={capaTitleStyle}>O Guia do<br /><span style={{ color: "#00e5e5" }}>Síndico Seguro</span></h1>
-            <p style={{ color: "#B0C4D8", fontSize: 18 }}>Estratégias de elite para proteção condominial.</p>
+            <div style={badgeStyle}>Material Exclusivo SEGCOMP</div>
+            
+            <h1 style={capaTitleStyle}>
+              O Guia do<br />
+              <span style={{ color: "#00e5e5", textShadow: "0 0 20px rgba(0,229,229,0.3)" }}>
+                Síndico Seguro
+              </span>
+            </h1>
+            
+            <p style={{ color: "#B0C4D8", fontSize: "clamp(16px, 4vw, 20px)", maxWidth: "500px", margin: "0 auto", lineHeight: 1.4 }}>
+              Estratégias de elite para blindar seu condomínio contra as novas táticas de invasão.
+            </p>
+
+            {/* Indicador visual de ação */}
+            <div style={{ marginTop: "40px", animation: "bounce 2s infinite" }}>
+              <span style={{ fontSize: "12px", color: "#00e5e5", textTransform: "uppercase", letterSpacing: "3px", fontWeight: 800 }}>
+                Role para iniciar a leitura
+              </span>
+              <div style={{ fontSize: "24px", color: "#00e5e5", marginTop: "10px" }}>↓</div>
+            </div>
           </div>
         </div>
 
@@ -698,14 +721,39 @@ const textStyle: React.CSSProperties = { fontSize: 15, color: "#cbd5e1", lineHei
 const tagStyle: React.CSSProperties = { display: "inline-block", color: "#00e5e5", fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", marginBottom: 8 };
 const badgeStyle: React.CSSProperties = { display: "inline-block", background: "#00e5e5", color: "#0f172a", fontSize: 11, fontWeight: 800, padding: "6px 16px", borderRadius: 20, marginBottom: 15 };
 const ctaButtonStyle: React.CSSProperties = { background: "#00e5e5", color: "#0f172a", border: "none", borderRadius: 12, padding: "18px 40px", fontSize: 16, fontWeight: 800, cursor: "pointer", marginTop: 30, boxShadow: "0 10px 20px #00e5e533" };
-const capaImgStyle: React.CSSProperties = { position: "absolute", top: 0, left: 0, width: "100%", height: "65%", objectFit: "cover" };
-const capaOverlayStyle: React.CSSProperties = { position: "absolute", bottom: 0, left: 0, right: 0, height: "60%", background: "linear-gradient(to top, #0f172a 50%, transparent)" };
-const capaContentStyle: React.CSSProperties = { position: "relative", zIndex: 2, textAlign: "center", padding: 60, marginTop: "auto" };
+const capaImgStyle: React.CSSProperties = { 
+  position: "absolute", 
+  top: 0, 
+  left: 0, 
+  width: "100%", 
+  height: "100%", // Agora a imagem ocupa o fundo todo
+  objectFit: "cover",
+  opacity: 0.4 // Reduzimos a opacidade para o texto "saltar" aos olhos
+};
+
+const capaOverlayStyle: React.CSSProperties = { 
+  position: "absolute", 
+  inset: 0, 
+  background: "linear-gradient(to bottom, rgba(10,17,40,0.8) 0%, #0a1128 100%)", // Gradiente mais denso
+  zIndex: 1
+};
+const capaContentStyle: React.CSSProperties = { 
+  position: "relative", 
+  zIndex: 2, 
+  textAlign: "center", 
+  padding: "20px",
+  marginTop: "80px", // Dá espaço para a barra de navegação superior
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "flex-start"
+};
 const capaTitleStyle: React.CSSProperties = { 
-  fontSize: "clamp(36px, 8vw, 52px)", // Fonte diminui no celular
+  fontSize: "clamp(38px, 10vw, 64px)", // Muito maior e responsivo
   fontWeight: 900, 
-  lineHeight: 1.1, 
-  margin: "16px 0" 
+  lineHeight: 1, 
+  margin: "20px 0",
+  letterSpacing: "-2px"
 };
 const dotStyle: React.CSSProperties = {
   width: 28, height: 28, background: "#00e5e5", borderRadius: "50%", display: "flex",

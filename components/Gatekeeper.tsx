@@ -33,7 +33,7 @@ export default function Gatekeeper({ onAccessGranted }: GatekeeperProps) {
     if (etapa === 1) return form.nome.length > 2;
     if (etapa === 2) return form.cargo !== '';
     if (etapa === 3) return form.condominio.length > 2;
-    // Pega o valor, tira os parênteses/traços e conta se tem exatamente 11 dígitos
+    // Valida se tem exatamente 11 dígitos numéricos
     if (etapa === 4) return form.whatsapp.replace(/\D/g, '').length === 11;
     return false;
   };
@@ -43,6 +43,18 @@ export default function Gatekeeper({ onAccessGranted }: GatekeeperProps) {
   return (
     <div className="fixed inset-0 bg-[#0a1128] z-50 flex flex-col items-center justify-center p-6 text-white font-sans">
       
+      {/* Estilos da Animação Glow Pulse */}
+      <style jsx>{`
+        @keyframes glowPulse {
+          0% { box-shadow: 0 0 5px rgba(0, 229, 229, 0.4); transform: scale(1); }
+          50% { box-shadow: 0 0 20px rgba(0, 229, 229, 0.7); transform: scale(1.02); }
+          100% { box-shadow: 0 0 5px rgba(0, 229, 229, 0.4); transform: scale(1); }
+        }
+        .animate-glow {
+          animation: glowPulse 1.5s infinite ease-in-out;
+        }
+      `}</style>
+
       {/* BARRA DE PROGRESSO SUPERIOR */}
       <div className="w-full max-w-xl mb-12">
         <div className="flex justify-between text-[#00e5e5] text-xs font-bold mb-3 uppercase tracking-widest">
@@ -144,7 +156,11 @@ export default function Gatekeeper({ onAccessGranted }: GatekeeperProps) {
             <button 
               disabled={!podeProsseguir()}
               onClick={proximaEtapa}
-              className={`px-8 py-4 rounded-2xl font-black uppercase tracking-widest transition-all ${podeProsseguir() ? 'bg-[#00e5e5] text-[#0a1128] shadow-lg shadow-[#00e5e530] hover:scale-105' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`}
+              className={`px-8 py-4 rounded-2xl font-black uppercase tracking-widest transition-all duration-300 ${
+                podeProsseguir() 
+                ? 'bg-[#00e5e5] text-[#0a1128] shadow-lg shadow-[#00e5e530] hover:scale-105 animate-glow' 
+                : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+              }`}
             >
               {etapa === totalEtapas ? 'Liberar Guia Agora' : 'Próximo →'}
             </button>
@@ -152,7 +168,9 @@ export default function Gatekeeper({ onAccessGranted }: GatekeeperProps) {
         </div>
       </div>
 
-      <p className="mt-8 text-slate-500 text-[10px] uppercase tracking-[4px]"><span className="text-[#00e5e5]"> SEGCOMP: </span>Segurança • Inteligência • Tecnologia</p>
+      <p className="mt-8 text-slate-500 text-[10px] uppercase tracking-[4px]">
+        <span className="text-[#00e5e5] font-bold">SEGCOMP:</span> Segurança • Inteligência • Tecnologia
+      </p>
     </div>
   );
 }
