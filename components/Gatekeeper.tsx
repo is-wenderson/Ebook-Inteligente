@@ -152,7 +152,7 @@ export default function Gatekeeper({ onAccessGranted }: GatekeeperProps) {
         </div>
       </div>
 
-      <p className="mt-8 text-slate-500 text-[10px] uppercase tracking-[4px]">Segurança • Inteligência • Tecnologia</p>
+      <p className="mt-8 text-slate-500 text-[10px] uppercase tracking-[4px]"><span className="text-[#00e5e5]"> SEGCOMP: </span>Segurança • Inteligência • Tecnologia</p>
     </div>
   );
 }
